@@ -1,0 +1,187 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Layout from './components/layout/Layout';
+import Home from './pages/Home';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import EmailVerification from './components/auth/EmailVerification';
+import ConnectWallet from './components/wallet/ConnectWallet';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import AdminRoute from './components/routing/AdminRoute';
+import AdminDashboard from './components/admin/AdminDashboard';
+import UserManagement from './components/admin/UserManagement';
+import EditUser from './components/admin/EditUser';
+import RegisterAdmin from './components/admin/RegisterAdmin';
+import SiteSettings from './components/admin/SiteSettings';
+import KycManager from './components/admin/KycManager';
+import { AuthProvider } from './context/AuthContext';
+import SiteAccessGate from './components/auth/SiteAccessGate';
+import KycForm from './components/profile/KycForm';
+import ProfileLayout from './components/profile/ProfileLayout';
+import api from './utils/api';
+
+function App() {
+  const [isSiteAccessRequired, setIsSiteAccessRequired] = useState(false);
+  const [isCheckingSiteAccess, setIsCheckingSiteAccess] = useState(true);
+  
+  // Check site access on first load
+  useEffect(() => {
+    const checkSiteAccess = async () => {
+      try {
+        setIsCheckingSiteAccess(true);
+        console.log('Checking site access...');
+        
+        // Check if we have a site access token in local storage
+        const siteAccessToken = localStorage.getItem('siteAccessToken');
+        const headers = {};
+        
+        if (siteAccessToken) {
+          console.log('Found site access token in localStorage');
+          headers['x-site-access-token'] = siteAccessToken;
+          
+          try {
+            // Only validate the token if it exists
+            console.log('Making request to /health endpoint with token');
+            await api.get('/health', { headers });
+            
+            // If successful with token, access is granted
+            console.log('Token is valid, access granted');
+            setIsSiteAccessRequired(false);
+          } catch (tokenError) {
+            console.log('Token validation error:', tokenError);
+            // Token is invalid, remove it
+            localStorage.removeItem('siteAccessToken');
+            // Force site access requirement
+            console.log('Token is invalid, site access is required');
+            setIsSiteAccessRequired(true);
+          }
+        } else {
+          console.log('No site access token found in localStorage');
+          // No token found, always require site access
+          console.log('No token, site access is required');
+          setIsSiteAccessRequired(true);
+        }
+      } catch (error) {
+        console.log('Site access error:', error);
+        console.log('Error response:', error.response?.data);
+        
+        // Default to requiring access on any errors
+        console.log('Error occurred, defaulting to require site access');
+        setIsSiteAccessRequired(true);
+      } finally {
+        setIsCheckingSiteAccess(false);
+      }
+    };
+    
+    checkSiteAccess();
+  }, []);
+  
+  // Set up axios interceptor for site access token
+  useEffect(() => {
+    const interceptor = axios.interceptors.request.use(
+      (config) => {
+        const siteAccessToken = localStorage.getItem('siteAccessToken');
+        if (siteAccessToken) {
+          config.headers['x-site-access-token'] = siteAccessToken;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+    
+    return () => {
+      axios.interceptors.request.eject(interceptor);
+    };
+  }, []);
+  
+  if (isCheckingSiteAccess) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  
+  if (isSiteAccessRequired) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="*" element={<SiteAccessGate />} />
+        </Routes>
+      </Router>
+    );
+  }
+  
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Auth routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register-admin" element={<RegisterAdmin />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
+          <Route path="/verify-email/:token" element={<EmailVerification />} />
+          
+          {/* Admin routes */}
+          <Route path="/admin" element={<Layout />}>
+            <Route element={<AdminRoute />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<UserManagement />} />
+              <Route path="users/:id/edit" element={<EditUser />} />
+              <Route path="settings" element={<SiteSettings />} />
+              <Route path="kyc" element={<KycManager />} />
+            </Route>
+          </Route>
+          
+          {/* Main layout routes */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            
+            {/* Protected routes */}
+            <Route path="dashboard" element={
+              <ProtectedRoute>
+                <div className="flex justify-center items-center h-96">
+                  <h2 className="text-2xl font-display font-bold">Dashboard Coming Soon</h2>
+                </div>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="marketplace" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Marketplace Coming Soon</h2></div>} />
+            <Route path="staking" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Staking Coming Soon</h2></div>} />
+            <Route path="governance" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Governance Coming Soon</h2></div>} />
+            
+            {/* Wallet connection (protected) */}
+            <Route path="connect-wallet" element={
+              <ProtectedRoute>
+                <ConnectWallet />
+              </ProtectedRoute>
+            } />
+            
+            {/* User profile routes (protected) */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <ProfileLayout />
+              </ProtectedRoute>
+            }>
+              <Route path="profile" element={<KycForm />} />
+              <Route path="settings" element={
+                <div className="flex justify-center items-center h-96">
+                  <h2 className="text-2xl font-display font-bold">User Settings Coming Soon</h2>
+                </div>
+              } />
+            </Route>
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </Router>
+      <ToastContainer position="bottom-right" />
+    </AuthProvider>
+  );
+}
+
+export default App;
