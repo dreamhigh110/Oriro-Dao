@@ -3,19 +3,13 @@ import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import logoSvg from '../../assets/icons/logo.svg';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import UserDropdown from './UserDropdown';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    if (localStorage.getItem('theme') === 'dark' || 
-      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      return true;
-    }
-    return false;
-  });
-  
+  const { darkMode, toggleTheme } = useTheme();
   const { currentUser, isAdmin } = useAuth();
 
   // Handle scroll effect
@@ -31,17 +25,6 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Handle dark mode
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
 
   // Navigation items
   const navItems = [
@@ -103,7 +86,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-dark-light transition-colors"
               aria-label="Toggle dark mode"
             >
@@ -184,7 +167,7 @@ const Navbar = () => {
           
           <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-dark-light mt-4">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleTheme}
               className="flex items-center p-2 rounded-full hover:bg-slate-200 dark:hover:bg-dark-light transition-colors"
               aria-label="Toggle dark mode"
             >

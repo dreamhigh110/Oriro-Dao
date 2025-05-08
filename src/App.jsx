@@ -18,6 +18,7 @@ import RegisterAdmin from './components/admin/RegisterAdmin';
 import SiteSettings from './components/admin/SiteSettings';
 import KycManager from './components/admin/KycManager';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import SiteAccessGate from './components/auth/SiteAccessGate';
 import KycForm from './components/profile/KycForm';
 import ProfileLayout from './components/profile/ProfileLayout';
@@ -107,80 +108,84 @@ function App() {
   
   if (isSiteAccessRequired) {
     return (
-      <Router>
-        <Routes>
-          <Route path="*" element={<SiteAccessGate />} />
-        </Routes>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            <Route path="*" element={<SiteAccessGate />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     );
   }
   
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Auth routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/register-admin" element={<RegisterAdmin />} />
-          <Route path="/verify-email" element={<EmailVerification />} />
-          <Route path="/verify-email/:token" element={<EmailVerification />} />
-          
-          {/* Admin routes */}
-          <Route path="/admin" element={<Layout />}>
-            <Route element={<AdminRoute />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="users/:id/edit" element={<EditUser />} />
-              <Route path="settings" element={<SiteSettings />} />
-              <Route path="kyc" element={<KycManager />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/register-admin" element={<RegisterAdmin />} />
+            <Route path="/verify-email" element={<EmailVerification />} />
+            <Route path="/verify-email/:token" element={<EmailVerification />} />
+            
+            {/* Admin routes */}
+            <Route path="/admin" element={<Layout />}>
+              <Route element={<AdminRoute />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="users/:id/edit" element={<EditUser />} />
+                <Route path="settings" element={<SiteSettings />} />
+                <Route path="kyc" element={<KycManager />} />
+              </Route>
             </Route>
-          </Route>
-          
-          {/* Main layout routes */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
             
-            {/* Protected routes */}
-            <Route path="dashboard" element={
-              <ProtectedRoute>
-                <div className="flex justify-center items-center h-96">
-                  <h2 className="text-2xl font-display font-bold">Dashboard Coming Soon</h2>
-                </div>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="marketplace" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Marketplace Coming Soon</h2></div>} />
-            <Route path="staking" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Staking Coming Soon</h2></div>} />
-            <Route path="governance" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Governance Coming Soon</h2></div>} />
-            
-            {/* Wallet connection (protected) */}
-            <Route path="connect-wallet" element={
-              <ProtectedRoute>
-                <ConnectWallet />
-              </ProtectedRoute>
-            } />
-            
-            {/* User profile routes (protected) */}
-            <Route path="/" element={
-              <ProtectedRoute>
-                <ProfileLayout />
-              </ProtectedRoute>
-            }>
-              <Route path="profile" element={<KycForm />} />
-              <Route path="settings" element={
-                <div className="flex justify-center items-center h-96">
-                  <h2 className="text-2xl font-display font-bold">User Settings Coming Soon</h2>
-                </div>
+            {/* Main layout routes */}
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              
+              {/* Protected routes */}
+              <Route path="dashboard" element={
+                <ProtectedRoute>
+                  <div className="flex justify-center items-center h-96">
+                    <h2 className="text-2xl font-display font-bold">Dashboard Coming Soon</h2>
+                  </div>
+                </ProtectedRoute>
               } />
+              
+              <Route path="marketplace" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Marketplace Coming Soon</h2></div>} />
+              <Route path="staking" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Staking Coming Soon</h2></div>} />
+              <Route path="governance" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Governance Coming Soon</h2></div>} />
+              
+              {/* Wallet connection (protected) */}
+              <Route path="connect-wallet" element={
+                <ProtectedRoute>
+                  <ConnectWallet />
+                </ProtectedRoute>
+              } />
+              
+              {/* User profile routes (protected) */}
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <ProfileLayout />
+                </ProtectedRoute>
+              }>
+                <Route path="profile" element={<KycForm />} />
+                <Route path="settings" element={
+                  <div className="flex justify-center items-center h-96">
+                    <h2 className="text-2xl font-display font-bold">User Settings Coming Soon</h2>
+                  </div>
+                } />
+              </Route>
+              
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
-            
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </Router>
-      <ToastContainer position="bottom-right" />
-    </AuthProvider>
+          </Routes>
+        </Router>
+        <ToastContainer position="bottom-right" />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
