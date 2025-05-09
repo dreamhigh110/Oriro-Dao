@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// API base URL - ensuring it has the correct path structure
-const API_URL = 'http://localhost:5000/api';
+// API base URL - Use relative path when frontend and backend are on same domain
+const API_URL = '/api';
 
 // Create axios instance
 const api = axios.create({

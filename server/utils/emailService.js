@@ -3,14 +3,15 @@ import nodemailer from 'nodemailer';
 // Create email transporter configuration
 const createTransporter = () => {
   // For production, use SMTP settings from environment variables
-  if (globalThis.process?.env.NODE_ENV === 'production') {
+  if (globalThis.process?.env.NODE_ENV === 'production' || true) { // Force use of real email even in development
     return nodemailer.createTransport({
+      service: globalThis.process?.env.EMAIL_SERVICE,
       host: globalThis.process?.env.EMAIL_HOST,
       port: globalThis.process?.env.EMAIL_PORT,
-      secure: globalThis.process?.env.EMAIL_SECURE === 'true',
+      secure: false, // true for 465, false for other ports
       auth: {
         user: globalThis.process?.env.EMAIL_USER,
-        pass: globalThis.process?.env.EMAIL_PASSWORD
+        pass: globalThis.process?.env.EMAIL_PASS
       }
     });
   }
@@ -30,26 +31,20 @@ const createTransporter = () => {
 // Generate verification email
 export const sendVerificationEmail = async (user, verificationToken) => {
   try {
-    // Create the verification link
-    const baseUrl = globalThis.process?.env.NODE_ENV === 'production' 
-      ? globalThis.process?.env.FRONTEND_URL || 'https://oriro.com' 
-      : 'http://localhost:5173';
+    // Always use the production URL for email links
+    const baseUrl = 'https://oriro.org';
       
     const verificationLink = `${baseUrl}/verify-email/${verificationToken}`;
     
-    // In development mode, just log the verification link
-    if (globalThis.process?.env.NODE_ENV !== 'production') {
-      console.log('\n=====================================================');
-      console.log(`🔑 EMAIL VERIFICATION LINK for ${user.email}:`);
-      console.log(`📧 ${verificationLink}`);
-      console.log('=====================================================\n');
-      return true;
-    }
+    // Always log the verification link for debugging
+    console.log('\n=====================================================');
+    console.log(`🔑 EMAIL VERIFICATION LINK for ${user.email}:`);
+    console.log(`📧 ${verificationLink}`);
+    console.log('=====================================================\n');
     
-    // In production, send the actual email
     // Create the email content
     const mailOptions = {
-      from: globalThis.process?.env.EMAIL_FROM || '"Oriro Team" <noreply@oriro.com>',
+      from: globalThis.process?.env.EMAIL_FROM || '"Oriro Team" <noreply@oriro.org>',
       to: user.email,
       subject: 'Verify Your Oriro Account',
       html: `
@@ -109,25 +104,20 @@ export const sendVerificationEmail = async (user, verificationToken) => {
 // Send password reset email
 export const sendPasswordResetEmail = async (user, resetToken) => {
   try {
-    // Create the reset link
-    const baseUrl = globalThis.process?.env.NODE_ENV === 'production' 
-      ? globalThis.process?.env.FRONTEND_URL || 'https://oriro.com' 
-      : 'http://localhost:5173';
+    // Always use the production URL for email links
+    const baseUrl = 'https://oriro.org';
       
     const resetLink = `${baseUrl}/reset-password/${resetToken}`;
     
-    // In development mode, just log the reset link
-    if (globalThis.process?.env.NODE_ENV !== 'production') {
-      console.log('\n=====================================================');
-      console.log(`🔑 PASSWORD RESET LINK for ${user.email}:`);
-      console.log(`📧 ${resetLink}`);
-      console.log('=====================================================\n');
-      return true;
-    }
+    // Always log the reset link for debugging
+    console.log('\n=====================================================');
+    console.log(`🔑 PASSWORD RESET LINK for ${user.email}:`);
+    console.log(`📧 ${resetLink}`);
+    console.log('=====================================================\n');
     
     // Create the email content
     const mailOptions = {
-      from: globalThis.process?.env.EMAIL_FROM || '"Oriro Team" <noreply@oriro.com>',
+      from: globalThis.process?.env.EMAIL_FROM || '"Oriro Team" <noreply@oriro.org>',
       to: user.email,
       subject: 'Reset Your Oriro Password',
       html: `

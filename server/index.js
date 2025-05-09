@@ -25,7 +25,20 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+// Enhanced CORS configuration
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://oriro.org', 'http://oriro.org', 'http://168.231.113.156:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-site-access-token', 'Origin', 'X-Requested-With'],
+  exposedHeaders: ['x-site-access-token'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+
+// Handle OPTIONS requests manually to ensure CORS headers are present
+app.options('*', cors());
 
 // File Upload Middleware
 app.use(fileUpload({
@@ -193,14 +206,31 @@ app.get('/', (req, res) => {
   res.send('Oriro API is running...');
 });
 
+// Simple test endpoint
+app.get('/test', (req, res) => {
+  res.json({ 
+    status: 'success',
+    message: 'Test endpoint is working',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Connect to MongoDB and start server
 const startServer = async () => {
   try {
     await connectDB();
     
+    // Initialize SiteSettings on server startup
+    try {
+      await SiteSettings.findSettings();
+      console.log('SiteSettings initialized successfully');
+    } catch (settingsError) {
+      console.error('Error initializing SiteSettings:', settingsError);
+    }
+    
     // Start server
     const PORT = globalThis.process?.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}, accessible from all interfaces`));
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
