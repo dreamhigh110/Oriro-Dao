@@ -5,6 +5,7 @@ import logoSvg from '../../assets/icons/logo.svg';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import UserDropdown from './UserDropdown';
+import ConnectWalletButton from '../wallet/ConnectWalletButton';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,12 +101,8 @@ const Navbar = () => {
             {currentUser ? (
               /* User is logged in */
               <div className="flex items-center space-x-4">
-                {/* Connect Wallet Button - shown only if wallet not connected */}
-                {!currentUser.walletConnected && (
-                  <Link to="/connect-wallet" className="text-sm font-medium px-3 py-2 rounded-md border border-primary text-primary hover:bg-primary/10 transition-colors">
-                    Connect Wallet
-                  </Link>
-                )}
+                {/* Connect Wallet Button - use our new component */}
+                <ConnectWalletButton />
                 {/* User Dropdown */}
                 <UserDropdown />
               </div>
@@ -181,16 +178,10 @@ const Navbar = () => {
             
             {currentUser ? (
               <div className="flex flex-col space-y-2">
-                {/* Connect Wallet Button - shown only if wallet not connected */}
-                {!currentUser.walletConnected && (
-                  <Link 
-                    to="/connect-wallet" 
-                    className="px-4 py-2 text-center rounded-md border border-primary text-primary"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Connect Wallet
-                  </Link>
-                )}
+                {/* Connect Wallet Button - use our new component */}
+                <div onClick={() => setIsOpen(false)}>
+                  <ConnectWalletButton />
+                </div>
                 <Link 
                   to="/profile" 
                   className="px-4 py-2 rounded-md bg-primary text-white text-center"
