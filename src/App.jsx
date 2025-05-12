@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import EmailVerification from './components/auth/EmailVerification';
-import ConnectWallet from './components/wallet/ConnectWallet';
+import ConnectWalletButton from './components/wallet/ConnectWalletButton';
 import Dashboard from './pages/Dashboard';
 import Staking from './pages/Staking';
 import Governance from './pages/Governance';
@@ -28,6 +28,10 @@ import KycForm from './components/profile/KycForm';
 import ProfileLayout from './components/profile/ProfileLayout';
 import api from './utils/api';
 import WalletProvider from './providers/WalletProvider';
+import ProfileEdit from './components/profile/ProfileEdit';
+import UserSettings from './components/profile/UserSettings';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ResetPassword from './components/auth/ResetPassword';
 
 function App() {
   const [isSiteAccessRequired, setIsSiteAccessRequired] = useState(false);
@@ -136,6 +140,8 @@ function App() {
                 <Route path="/register-admin" element={<RegisterAdmin />} />
                 <Route path="/verify-email" element={<EmailVerification />} />
                 <Route path="/verify-email/:token" element={<EmailVerification />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
                 
                 {/* Admin routes */}
                 <Route path="/admin" element={<Layout />}>
@@ -174,7 +180,13 @@ function App() {
                   {/* Wallet connection (protected) */}
                   <Route path="connect-wallet" element={
                     <ProtectedRoute>
-                      <ConnectWallet />
+                      <div className="container mx-auto py-12 px-4">
+                        <h1 className="text-3xl font-display font-bold mb-8">Connect Your Wallet</h1>
+                        <div className="bg-white dark:bg-dark-light p-6 rounded-lg shadow-md">
+                          <p className="mb-6">Connect your Web3 wallet to interact with the Oriro platform.</p>
+                          <ConnectWalletButton />
+                        </div>
+                      </div>
                     </ProtectedRoute>
                   } />
                   
@@ -185,11 +197,8 @@ function App() {
                     </ProtectedRoute>
                   }>
                     <Route path="profile" element={<KycForm />} />
-                    <Route path="settings" element={
-                      <div className="flex justify-center items-center h-96">
-                        <h2 className="text-2xl font-display font-bold">User Settings Coming Soon</h2>
-                      </div>
-                    } />
+                    <Route path="profile/edit" element={<ProfileEdit />} />
+                    <Route path="settings" element={<UserSettings />} />
                   </Route>
                   
                   <Route path="*" element={<Navigate to="/" replace />} />

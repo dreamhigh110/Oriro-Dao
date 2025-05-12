@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import { useAuth } from '../../context/AuthContext';
@@ -10,11 +10,21 @@ import { useAuth } from '../../context/AuthContext';
 const ConnectWalletButton = () => {
   const { address, isConnected } = useAccount();
   const { connectWallet, currentUser } = useAuth();
+  const lastConnectedAddress = useRef(null);
 
-  // When wallet gets connected, update the user profile
+  // When wallet gets connected or changes, update the user profile
   useEffect(() => {
-    if (isConnected && address && currentUser) {
-      // Only update if there's a logged-in user
+    // Only update if there's a logged-in user, a connected wallet, and the address has changed
+    if (isConnected && address && currentUser && 
+        address !== lastConnectedAddress.current && 
+        address !== currentUser.walletAddress) {
+      
+      console.log('Wallet address changed, updating profile');
+      
+      // Update the reference to avoid unnecessary API calls
+      lastConnectedAddress.current = address;
+      
+      // Send the update to the server
       connectWallet(address).catch(err => {
         console.log('Error connecting wallet to user profile:', err);
       });

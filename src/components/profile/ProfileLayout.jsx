@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { FiUser, FiCreditCard, FiFileText, FiSettings } from 'react-icons/fi';
+import { FiUser, FiCreditCard, FiFileText, FiSettings, FiEdit } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 
 const ProfileLayout = () => {
@@ -11,6 +11,11 @@ const ProfileLayout = () => {
   }
 
   const menuItems = [
+    { 
+      name: 'Edit Profile', 
+      path: '/profile/edit', 
+      icon: <FiEdit className="mr-2" />
+    },
     { 
       name: 'KYC Verification', 
       path: '/profile', 

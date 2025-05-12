@@ -8,7 +8,10 @@ import {
   verifySiteAccess,
   verifyEmail,
   resendVerification,
-  updateKyc
+  updateKyc,
+  forgotPassword,
+  verifyResetToken,
+  resetPassword
 } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -21,6 +24,9 @@ router.post('/register-admin', registerAdmin);
 router.post('/login', login);
 router.get('/verify-email/:token', verifyEmail);
 router.post('/resend-verification', resendVerification);
+router.post('/forgot-password', forgotPassword);
+router.get('/verify-reset-token/:token', verifyResetToken);
+router.post('/reset-password', resetPassword);
 
 // Protected routes
 router.get('/me', protect, getMe);

@@ -13,5 +13,13 @@ export default defineConfig({
       clientPort: 443,
       protocol: 'wss'
     }
+  },
+  server: {
+    allowedHosts: [
+      'oriro.org',
+      'www.oriro.org',
+      'localhost',
+      '127.0.0.1',
+    ]
   }
 })

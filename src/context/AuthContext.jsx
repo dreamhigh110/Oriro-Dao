@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
 
 const AuthContext = createContext();
@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('oriroToken') || null);
+  const [isConnectingWallet, setIsConnectingWallet] = useState(false);
   
   // Set auth token header
   useEffect(() => {
@@ -86,11 +87,27 @@ export const AuthProvider = ({ children }) => {
     return Promise.resolve();
   };
 
-  // Connect wallet function
-  const connectWallet = async (walletAddress = "0x...") => {
+  // Connect wallet function - memoized to avoid unnecessary rerenders
+  const connectWallet = useCallback(async (walletAddress) => {
     if (!currentUser) return Promise.reject('User not logged in');
+    if (!walletAddress) return Promise.reject('No wallet address provided');
+    
+    // Skip if the wallet is already connected with this address
+    if (currentUser.walletAddress === walletAddress) {
+      console.log('Wallet already connected with this address');
+      return currentUser;
+    }
+    
+    // Skip if there's an ongoing connection
+    if (isConnectingWallet) {
+      console.log('Wallet connection already in progress');
+      return currentUser;
+    }
     
     try {
+      setIsConnectingWallet(true);
+      console.log('Connecting wallet address:', walletAddress);
+      
       const res = await api.put('/auth/connect-wallet', { walletAddress });
       const updatedUser = res.data;
       setCurrentUser(updatedUser);
@@ -98,8 +115,10 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Connect wallet error:', error);
       return Promise.reject(error.response?.data?.message || 'Failed to connect wallet');
+    } finally {
+      setIsConnectingWallet(false);
     }
-  };
+  }, [currentUser, isConnectingWallet]);
 
   const value = {
     currentUser,
