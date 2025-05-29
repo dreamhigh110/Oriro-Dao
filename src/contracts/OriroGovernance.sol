@@ -318,25 +318,6 @@ contract OriroGovernance is AccessControl, ReentrancyGuard {
     }
     
     /**
-     * @dev Updates the voting period
-     * @param _votingPeriod New voting period in seconds
-     */
-    function setVotingPeriod(uint256 _votingPeriod) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(_votingPeriod > 0, "Voting period cannot be 0");
-        votingPeriod = _votingPeriod;
-        emit VotingPeriodUpdated(_votingPeriod);
-    }
-    
-    /**
-     * @dev Updates the voting delay
-     * @param _votingDelay New voting delay in seconds
-     */
-    function setVotingDelay(uint256 _votingDelay) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        votingDelay = _votingDelay;
-        emit VotingDelayUpdated(_votingDelay);
-    }
-    
-    /**
      * @dev Updates the proposal threshold
      * @param _proposalThreshold New proposal threshold
      */

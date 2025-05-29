@@ -15,7 +15,8 @@ export const defaultChain = sepolia;
 // RPC configuration for each chain
 export const rpcConfig = {
   [mainnet.id]: {
-    rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/W05ZYjsQKEgRWEHRo1fYmPltz7_bpw1s',
+    // rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/W05ZYjsQKEgRWEHRo1fYmPltz7_bpw1s',
+    rpcUrl: 'https://sepolia.drpc.org',
     name: 'Ethereum',
     blockExplorer: 'https://etherscan.io',
     nativeCurrency: {
@@ -45,7 +46,8 @@ export const rpcConfig = {
     },
   },
   [sepolia.id]: {
-    rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/W05ZYjsQKEgRWEHRo1fYmPltz7_bpw1s',
+    // rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/W05ZYjsQKEgRWEHRo1fYmPltz7_bpw1s',
+    rpcUrl: 'https://sepolia.drpc.org',
     name: 'Sepolia Testnet',
     blockExplorer: 'https://sepolia.etherscan.io',
     nativeCurrency: {

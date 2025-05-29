@@ -20,6 +20,7 @@ import EditUser from './components/admin/EditUser';
 import RegisterAdmin from './components/admin/RegisterAdmin';
 import SiteSettings from './components/admin/SiteSettings';
 import KycManager from './components/admin/KycManager';
+import RequestManagement from './components/admin/RequestManagement';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { BlockchainProvider } from './context/BlockchainContext';
@@ -32,6 +33,14 @@ import ProfileEdit from './components/profile/ProfileEdit';
 import UserSettings from './components/profile/UserSettings';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
+import MarketplaceLayout from './components/marketplace/MarketplaceLayout';
+import Marketplace from './components/marketplace/Marketplace';
+import MyCollection from './components/marketplace/MyCollection';
+import NFTRequestForm from './components/marketplace/NFTRequestForm';
+import UserRequestsDashboard from './components/marketplace/UserRequestsDashboard';
+import Bonds from './components/marketplace/Bonds';
+import MyBonds from './components/marketplace/MyBonds';
+import BondRequestForm from './components/marketplace/BondRequestForm';
 
 function App() {
   const [isSiteAccessRequired, setIsSiteAccessRequired] = useState(false);
@@ -151,6 +160,7 @@ function App() {
                     <Route path="users/:id/edit" element={<EditUser />} />
                     <Route path="settings" element={<SiteSettings />} />
                     <Route path="kyc" element={<KycManager />} />
+                    <Route path="requests" element={<RequestManagement />} />
                   </Route>
                 </Route>
                 
@@ -165,7 +175,37 @@ function App() {
                     </ProtectedRoute>
                   } />
                   
-                  <Route path="marketplace" element={<div className="flex justify-center items-center h-96"><h2 className="text-2xl font-display font-bold">Marketplace Coming Soon</h2></div>} />
+                  {/* Marketplace routes */}
+                  <Route path="marketplace" element={<MarketplaceLayout />}>
+                    <Route index element={<Marketplace />} />
+                    <Route path="collection" element={
+                      <ProtectedRoute>
+                        <MyCollection />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="bonds" element={<Bonds />} />
+                    <Route path="my-bonds" element={
+                      <ProtectedRoute>
+                        <MyBonds />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="create-nft" element={
+                      <ProtectedRoute>
+                        <NFTRequestForm />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="create-bond" element={
+                      <ProtectedRoute>
+                        <BondRequestForm />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="my-requests" element={
+                      <ProtectedRoute>
+                        <UserRequestsDashboard />
+                      </ProtectedRoute>
+                    } />
+                  </Route>
+                  
                   <Route path="staking" element={
                     <ProtectedRoute>
                       <Staking />

@@ -16,6 +16,9 @@ const __dirname = dirname(__filename);
 // Routes
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import marketplaceRoutes from './routes/marketplaceRoutes.js';
+import bondRoutes from './routes/bondRoutes.js';
+import nftRoutes from './routes/nftRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -200,6 +203,9 @@ app.get('/api/debug/site-access', async (req, res) => {
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/marketplace', marketplaceRoutes);
+app.use('/api/marketplace', bondRoutes);
+app.use('/api/marketplace', nftRoutes);
 
 // Root route
 app.get('/', (req, res) => {
