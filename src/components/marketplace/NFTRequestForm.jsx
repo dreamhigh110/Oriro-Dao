@@ -256,30 +256,30 @@ const NFTRequestForm = () => {
     
     if (reduction > 5) {
       return (
-        <p className="mt-1 text-xs text-green-600">
+        <p className="mt-1 text-xs text-green-600 dark:text-green-400">
           Optimized: {Math.round(originalFileSize/1024)}KB ({reduction}% smaller)
         </p>
       );
     }
     
     return (
-      <p className="mt-1 text-xs text-gray-600">
+      <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
         Size: {Math.round(originalFileSize/1024)}KB
       </p>
     );
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Create NFT Request</h2>
+    <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-dark-light rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Create NFT Request</h2>
       
       {loading && (
         <div className="mb-6">
           <div className="flex items-center mb-2">
             <FiLoader className="animate-spin mr-2 text-indigo-600" />
-            <span className="font-medium text-gray-700">{loadingState}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">{loadingState}</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
             <div 
               className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" 
               style={{ width: `${uploadProgress}%` }}
@@ -290,7 +290,7 @@ const NFTRequestForm = () => {
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             NFT Name
           </label>
           <input
@@ -299,13 +299,13 @@ const NFTRequestForm = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-darker dark:text-white"
             placeholder="Enter NFT name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Description
           </label>
           <textarea
@@ -314,13 +314,13 @@ const NFTRequestForm = () => {
             onChange={handleChange}
             required
             rows={4}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-darker dark:text-white"
             placeholder="Describe your NFT"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Image
           </label>
           <div className="mt-1">
@@ -335,9 +335,9 @@ const NFTRequestForm = () => {
             
             {formData.imageUrl ? (
               <div className="space-y-2">
-                <div className="flex items-center p-3 bg-gray-50 rounded-md border border-gray-200">
+                <div className="flex items-center p-3 bg-gray-50 dark:bg-dark-darker rounded-md border border-gray-200 dark:border-gray-600">
                   <FiFile className="text-indigo-600 mr-2" />
-                  <span className="text-sm text-gray-700 flex-grow truncate">
+                  <span className="text-sm text-gray-700 dark:text-gray-300 flex-grow truncate">
                     {fileName}
                   </span>
                   {getFileSizeInfo()}
@@ -358,7 +358,7 @@ const NFTRequestForm = () => {
             ) : (
               <label
                 htmlFor="nft-image"
-                className="cursor-pointer flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="cursor-pointer flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-dark-darker hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <FiUpload className="mr-2" />
                 Upload Image
@@ -367,14 +367,14 @@ const NFTRequestForm = () => {
             {errors.image && (
               <p className="mt-1 text-sm text-red-600">{errors.image}</p>
             )}
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               Accepted formats: JPEG, PNG (max 5MB)
             </p>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Category
           </label>
           <select
@@ -382,7 +382,7 @@ const NFTRequestForm = () => {
             value={formData.category}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-darker dark:text-white"
           >
             <option value="Art">Art</option>
             <option value="Real Estate">Real Estate</option>
@@ -394,7 +394,7 @@ const NFTRequestForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Price (ETH)
           </label>
           <input
@@ -405,13 +405,13 @@ const NFTRequestForm = () => {
             required
             min="0"
             step="0.000001"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-darker dark:text-white"
             placeholder="0.00"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Quantity
           </label>
           <input
@@ -421,7 +421,7 @@ const NFTRequestForm = () => {
             onChange={handleChange}
             required
             min="1"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-darker dark:text-white"
             placeholder="1"
           />
         </div>
@@ -429,7 +429,7 @@ const NFTRequestForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {loading ? 'Submitting...' : 'Submit Request'}
         </button>

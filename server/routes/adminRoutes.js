@@ -11,6 +11,11 @@ import {
   getKycRequests,
   updateKycStatus
 } from '../controllers/adminController.js';
+import { 
+  getContent, 
+  updateContent, 
+  getAllContent 
+} from '../controllers/contentController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -37,5 +42,11 @@ router.post('/generate-access-password', generateAccessPassword);
 // KYC management
 router.get('/kyc-requests', getKycRequests);
 router.put('/kyc-requests/:id', updateKycStatus);
+
+// Content management routes
+router.get('/content', getAllContent);
+router.route('/content/:type')
+  .get(getContent)
+  .put(updateContent);
 
 export default router; 

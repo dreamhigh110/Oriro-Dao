@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import SiteSettings from './models/SiteSettings.js';
+import { initializeDefaultContent } from './controllers/contentController.js';
+import globalErrorHandler from './errors/errorHandler.js';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import fs from 'fs';
@@ -221,6 +223,9 @@ app.get('/test', (req, res) => {
   });
 });
 
+// Global error handler
+app.use(globalErrorHandler);
+
 // Connect to MongoDB and start server
 const startServer = async () => {
   try {
@@ -232,6 +237,17 @@ const startServer = async () => {
       console.log('SiteSettings initialized successfully');
     } catch (settingsError) {
       console.error('Error initializing SiteSettings:', settingsError);
+    }
+    
+    // Initialize default content
+    try {
+      // We'll initialize with a placeholder admin user ID
+      // In a real application, you would use the actual admin user ID
+      const adminUserId = '60d5ecb54b24e1001c8b4567'; // Placeholder admin ID
+      await initializeDefaultContent(adminUserId);
+      console.log('Default content initialized successfully');
+    } catch (contentError) {
+      console.error('Error initializing default content:', contentError);
     }
     
     // Start server

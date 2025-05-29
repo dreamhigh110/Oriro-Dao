@@ -20,40 +20,40 @@ const BondCard = ({ bond }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white dark:bg-dark-light rounded-lg shadow-md overflow-hidden">
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{bond.name}</h3>
-            <p className="text-sm text-gray-500">{bond.description}</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{bond.name}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{bond.description}</p>
           </div>
-          <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+          <span className="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
             {bond.interestRate}% APY
           </span>
         </div>
         
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Face Value</span>
-            <span className="font-medium">{bond.faceValue} ETH</span>
+            <span className="text-gray-500 dark:text-gray-400">Face Value</span>
+            <span className="font-medium text-gray-900 dark:text-white">{bond.faceValue} ETH</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Quantity Owned</span>
-            <span className="font-medium">{bond.quantity}</span>
+            <span className="text-gray-500 dark:text-gray-400">Quantity Owned</span>
+            <span className="font-medium text-gray-900 dark:text-white">{bond.quantity}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Days Until Maturity</span>
-            <span className="font-medium">{calculateTimeRemaining()}</span>
+            <span className="text-gray-500 dark:text-gray-400">Days Until Maturity</span>
+            <span className="font-medium text-gray-900 dark:text-white">{calculateTimeRemaining()}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Interest Earned</span>
-            <span className="font-medium text-green-600">
+            <span className="text-gray-500 dark:text-gray-400">Interest Earned</span>
+            <span className="font-medium text-green-600 dark:text-green-400">
               {calculateInterestEarned().toFixed(4)} ETH
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Purchase Date</span>
-            <span className="font-medium">
+            <span className="text-gray-500 dark:text-gray-400">Purchase Date</span>
+            <span className="font-medium text-gray-900 dark:text-white">
               {new Date(bond.purchaseDate).toLocaleDateString()}
             </span>
           </div>
@@ -122,19 +122,19 @@ const MyBonds = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Bond Portfolio</h1>
-        <div className="text-gray-500">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Bond Portfolio</h1>
+        <div className="text-gray-500 dark:text-gray-400">
           Total Bonds: {bonds.length}
         </div>
       </div>
 
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Sort By</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sort By</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white"
           >
             <option value="maturityDate">Closest to Maturity</option>
             <option value="purchaseDate">Recently Purchased</option>
@@ -144,13 +144,13 @@ const MyBonds = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Search</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Search</label>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search your bonds..."
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white dark:placeholder-gray-400"
           />
         </div>
       </div>
@@ -163,10 +163,10 @@ const MyBonds = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">No bonds in your portfolio yet</p>
+          <p className="text-gray-500 dark:text-gray-400">No bonds in your portfolio yet</p>
           <a
             href="/marketplace/bonds"
-            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800"
           >
             Browse Bond Market
           </a>

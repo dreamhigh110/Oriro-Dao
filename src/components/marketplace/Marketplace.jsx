@@ -18,7 +18,7 @@ const NFTCard = ({ nft, onPurchase }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white dark:bg-dark-light rounded-lg shadow-md overflow-hidden">
       <div className="aspect-w-1 aspect-h-1">
         <img
           src={nft.imageUrl}
@@ -27,11 +27,11 @@ const NFTCard = ({ nft, onPurchase }) => {
         />
       </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900">{nft.name}</h3>
-        <p className="mt-1 text-sm text-gray-500">{nft.description}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{nft.name}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{nft.description}</p>
         <div className="mt-2 flex items-center justify-between">
-          <p className="text-lg font-medium text-gray-900">{nft.price} ETH</p>
-          <p className="text-sm text-gray-500">Available: {nft.quantity}</p>
+          <p className="text-lg font-medium text-gray-900 dark:text-white">{nft.price} ETH</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Available: {nft.quantity}</p>
         </div>
         <div className="mt-4">
           <button
@@ -39,8 +39,8 @@ const NFTCard = ({ nft, onPurchase }) => {
             disabled={loading || nft.quantity === 0}
             className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
               ${nft.quantity === 0 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700'} 
+                ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed' 
+                : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800'} 
               ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {loading ? 'Processing...' : nft.quantity === 0 ? 'Sold Out' : 'Purchase'}
@@ -118,10 +118,10 @@ const Marketplace = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">NFT Marketplace</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">NFT Marketplace</h1>
         <Link
           to="/marketplace/create-nft"
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800"
         >
           Create NFT
         </Link>
@@ -129,11 +129,11 @@ const Marketplace = () => {
 
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Filter</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Filter</label>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white"
           >
             <option value="all">All NFTs</option>
             <option value="available">Available</option>
@@ -142,11 +142,11 @@ const Marketplace = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Sort By</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sort By</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -156,13 +156,13 @@ const Marketplace = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Search</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Search</label>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search NFTs..."
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white dark:placeholder-gray-400"
           />
         </div>
       </div>
@@ -179,7 +179,7 @@ const Marketplace = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">No NFTs found</p>
+          <p className="text-gray-500 dark:text-gray-400">No NFTs found</p>
         </div>
       )}
     </div>

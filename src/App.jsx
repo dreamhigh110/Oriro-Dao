@@ -21,6 +21,7 @@ import RegisterAdmin from './components/admin/RegisterAdmin';
 import SiteSettings from './components/admin/SiteSettings';
 import KycManager from './components/admin/KycManager';
 import RequestManagement from './components/admin/RequestManagement';
+import ContentManagement from './components/admin/ContentManagement';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { BlockchainProvider } from './context/BlockchainContext';
@@ -41,6 +42,15 @@ import UserRequestsDashboard from './components/marketplace/UserRequestsDashboar
 import Bonds from './components/marketplace/Bonds';
 import MyBonds from './components/marketplace/MyBonds';
 import BondRequestForm from './components/marketplace/BondRequestForm';
+// New page imports
+import Documentation from './pages/Documentation';
+import Whitepaper from './pages/Whitepaper';
+import Support from './pages/Support';
+import FAQ from './pages/FAQ';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
+import Contact from './pages/Contact';
 
 function App() {
   const [isSiteAccessRequired, setIsSiteAccessRequired] = useState(false);
@@ -161,6 +171,7 @@ function App() {
                     <Route path="settings" element={<SiteSettings />} />
                     <Route path="kyc" element={<KycManager />} />
                     <Route path="requests" element={<RequestManagement />} />
+                    <Route path="content" element={<ContentManagement />} />
                   </Route>
                 </Route>
                 
@@ -240,6 +251,16 @@ function App() {
                     <Route path="profile/edit" element={<ProfileEdit />} />
                     <Route path="settings" element={<UserSettings />} />
                   </Route>
+
+                  {/* Public pages */}
+                  <Route path="docs" element={<Documentation />} />
+                  <Route path="whitepaper" element={<Whitepaper />} />
+                  <Route path="support" element={<Support />} />
+                  <Route path="faq" element={<FAQ />} />
+                  <Route path="privacy" element={<PrivacyPolicy />} />
+                  <Route path="terms" element={<TermsOfService />} />
+                  <Route path="cookies" element={<CookiePolicy />} />
+                  <Route path="contact" element={<Contact />} />
                   
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>

@@ -4,7 +4,7 @@ import api from '../../utils/api';
 
 const NFTCard = ({ nft }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white dark:bg-dark-light rounded-lg shadow-md overflow-hidden">
       <div className="aspect-w-1 aspect-h-1">
         <img
           src={nft.imageUrl}
@@ -13,14 +13,14 @@ const NFTCard = ({ nft }) => {
         />
       </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900">{nft.name}</h3>
-        <p className="mt-1 text-sm text-gray-500">{nft.description}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{nft.name}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{nft.description}</p>
         <div className="mt-2 flex items-center justify-between">
-          <p className="text-lg font-medium text-gray-900">{nft.price} ETH</p>
-          <p className="text-sm text-gray-500">Owned: {nft.quantity}</p>
+          <p className="text-lg font-medium text-gray-900 dark:text-white">{nft.price} ETH</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Owned: {nft.quantity}</p>
         </div>
         <div className="mt-2">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Purchased on {new Date(nft.purchaseDate).toLocaleDateString()}
           </p>
         </div>
@@ -81,17 +81,17 @@ const MyCollection = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My NFT Collection</h1>
-        <p className="text-gray-500">Total NFTs: {nfts.length}</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My NFT Collection</h1>
+        <p className="text-gray-500 dark:text-gray-400">Total NFTs: {nfts.length}</p>
       </div>
 
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Sort By</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sort By</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white"
           >
             <option value="newest">Recently Purchased</option>
             <option value="oldest">First Purchased</option>
@@ -101,13 +101,13 @@ const MyCollection = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Search</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Search</label>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search your NFTs..."
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-dark-light dark:text-white dark:placeholder-gray-400"
           />
         </div>
       </div>
@@ -120,10 +120,10 @@ const MyCollection = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">No NFTs in your collection yet</p>
+          <p className="text-gray-500 dark:text-gray-400">No NFTs in your collection yet</p>
           <a
             href="/marketplace"
-            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800"
           >
             Browse Marketplace
           </a>

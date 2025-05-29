@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { FiUsers, FiSettings, FiUserCheck, FiPackage } from 'react-icons/fi';
+import { FiUsers, FiSettings, FiUserCheck, FiPackage, FiFileText } from 'react-icons/fi';
 
 const StatCard = ({ title, value, icon, bgColor }) => (
   <div className={`p-6 rounded-lg shadow-md ${bgColor}`}>
@@ -123,6 +123,13 @@ export default function AdminDashboard() {
             className="flex items-center justify-center px-6 py-3 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 hover:shadow-md transition-all duration-200 text-center w-full"
           >
             <FiPackage className="mr-2" /> NFT/Bond Requests
+          </Link>
+
+          <Link 
+            to="/admin/content"
+            className="flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 hover:shadow-md transition-all duration-200 text-center w-full"
+          >
+            <FiFileText className="mr-2" /> Content Management
           </Link>
         </div>
       </div>
