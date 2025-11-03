@@ -120,7 +120,7 @@ const Footer = () => {
               A decentralized autonomous organization (DAO) platform featuring secure governance, 
               multi-chain infrastructure, NFT and bond marketplace, and DeFi services.
             </p>
-            <div className="mt-6 flex space-x-4">
+            {/* <div className="mt-6 flex space-x-4">
               {socialLinks.map((link) => (
                 <a
                   key={link.name}
@@ -133,7 +133,7 @@ const Footer = () => {
                   {link.icon}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Links sections */}
@@ -158,10 +158,10 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center md:space-x-4">
               <p className="text-slate-600 dark:text-slate-400 text-sm">
-                &copy; {currentYear} Oriro DAO. All rights reserved.
+                &copy; 2025 Oriro DAO. All rights reserved.
               </p>
               <p className="text-slate-500 dark:text-slate-500 text-xs mt-2 md:mt-0">
-                Built on Ethereum & Multi-chain Infrastructure
+              Built for Multi-chain Infrastructure
               </p>
             </div>
             <div className="mt-4 md:mt-0 flex flex-wrap justify-center md:justify-end space-x-6">

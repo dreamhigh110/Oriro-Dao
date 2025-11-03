@@ -118,17 +118,18 @@ const Hero = () => {
                   </div>
                   
                   <div className="flex justify-between text-xs">
-                    <span>Voting Power</span>
-                    <span>75%</span>
+                    <span>Staking Rewards</span>
+                    <span>12.5% APY</span>
                   </div>
                   
-                  <div className="flex justify-between mt-6 pt-6 border-t border-slate-200 dark:border-dark">
-                    <button className="px-4 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary dark:bg-primary/20">
-                      Stake
-                    </button>
-                    <button className="px-4 py-2 text-sm font-medium rounded-md bg-secondary/10 text-secondary dark:bg-secondary/20">
-                      Vote
-                    </button>
+                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-dark">
+                    <div className="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+                      <span>Platform Status</span>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        <span>Active</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>

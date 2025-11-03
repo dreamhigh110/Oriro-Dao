@@ -32,6 +32,29 @@ const siteSettingsSchema = mongoose.Schema(
     allowedDomains: {
       type: [String],
       default: []
+    },
+    // Homepage section visibility controls
+    homepageSettings: {
+      hero: {
+        type: Boolean,
+        default: true
+      },
+      features: {
+        type: Boolean,
+        default: true
+      },
+      marketplacePreview: {
+        type: Boolean,
+        default: true
+      },
+      blockchainSection: {
+        type: Boolean,
+        default: false // Hidden by default as requested
+      },
+      ctaSection: {
+        type: Boolean,
+        default: true
+      }
     }
   },
   {
@@ -48,7 +71,14 @@ siteSettingsSchema.statics.findSettings = async function() {
       siteAccessEnabled: true,
       registrationEnabled: true,
       maintenanceMode: false,
-      siteAccessPassword: 'demo123'
+      siteAccessPassword: 'demo123',
+      homepageSettings: {
+        hero: true,
+        features: true,
+        marketplacePreview: true,
+        blockchainSection: false,
+        ctaSection: true
+      }
     });
 
     // Set the password in the environment for immediate use
@@ -60,6 +90,18 @@ siteSettingsSchema.statics.findSettings = async function() {
   // Force site access to be enabled
   if (!settings.siteAccessEnabled) {
     settings.siteAccessEnabled = true;
+    await settings.save();
+  }
+  
+  // Ensure homepageSettings exists for backward compatibility
+  if (!settings.homepageSettings) {
+    settings.homepageSettings = {
+      hero: true,
+      features: true,
+      marketplacePreview: true,
+      blockchainSection: false,
+      ctaSection: true
+    };
     await settings.save();
   }
   

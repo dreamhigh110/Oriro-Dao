@@ -22,6 +22,7 @@ import SiteSettings from './components/admin/SiteSettings';
 import KycManager from './components/admin/KycManager';
 import RequestManagement from './components/admin/RequestManagement';
 import ContentManagement from './components/admin/ContentManagement';
+import HomepageSettings from './components/admin/HomepageSettings';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { BlockchainProvider } from './context/BlockchainContext';
@@ -42,6 +43,8 @@ import UserRequestsDashboard from './components/marketplace/UserRequestsDashboar
 import Bonds from './components/marketplace/Bonds';
 import MyBonds from './components/marketplace/MyBonds';
 import BondRequestForm from './components/marketplace/BondRequestForm';
+import Tokens from './components/marketplace/Tokens';
+import TokenRequestForm from './components/marketplace/TokenRequestForm';
 // New page imports
 import Documentation from './pages/Documentation';
 import Whitepaper from './pages/Whitepaper';
@@ -51,6 +54,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
 import Contact from './pages/Contact';
+import { ExchangeProvider } from './context/ExchangeContext';
+import Exchange from './pages/Exchange';
 
 function App() {
   const [isSiteAccessRequired, setIsSiteAccessRequired] = useState(false);
@@ -151,122 +156,137 @@ function App() {
       <AuthProvider>
         <WalletProvider>
           <BlockchainProvider>
-            <Router>
-              <Routes>
-                {/* Auth routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/register-admin" element={<RegisterAdmin />} />
-                <Route path="/verify-email" element={<EmailVerification />} />
-                <Route path="/verify-email/:token" element={<EmailVerification />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password/:token" element={<ResetPassword />} />
-                
-                {/* Admin routes */}
-                <Route path="/admin" element={<Layout />}>
-                  <Route element={<AdminRoute />}>
-                    <Route index element={<AdminDashboard />} />
-                    <Route path="users" element={<UserManagement />} />
-                    <Route path="users/:id/edit" element={<EditUser />} />
-                    <Route path="settings" element={<SiteSettings />} />
-                    <Route path="kyc" element={<KycManager />} />
-                    <Route path="requests" element={<RequestManagement />} />
-                    <Route path="content" element={<ContentManagement />} />
-                  </Route>
-                </Route>
-                
-                {/* Main layout routes */}
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Home />} />
+            <ExchangeProvider>
+              <Router>
+                <Routes>
+                  {/* Auth routes */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/register-admin" element={<RegisterAdmin />} />
+                  <Route path="/verify-email" element={<EmailVerification />} />
+                  <Route path="/verify-email/:token" element={<EmailVerification />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
                   
-                  {/* Protected routes */}
-                  <Route path="dashboard" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                  
-                  {/* Marketplace routes */}
-                  <Route path="marketplace" element={<MarketplaceLayout />}>
-                    <Route index element={<Marketplace />} />
-                    <Route path="collection" element={
-                      <ProtectedRoute>
-                        <MyCollection />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="bonds" element={<Bonds />} />
-                    <Route path="my-bonds" element={
-                      <ProtectedRoute>
-                        <MyBonds />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="create-nft" element={
-                      <ProtectedRoute>
-                        <NFTRequestForm />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="create-bond" element={
-                      <ProtectedRoute>
-                        <BondRequestForm />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="my-requests" element={
-                      <ProtectedRoute>
-                        <UserRequestsDashboard />
-                      </ProtectedRoute>
-                    } />
+                  {/* Admin routes */}
+                  <Route path="/admin" element={<Layout />}>
+                    <Route element={<AdminRoute />}>
+                      <Route index element={<AdminDashboard />} />
+                      <Route path="users" element={<UserManagement />} />
+                      <Route path="users/:id/edit" element={<EditUser />} />
+                      <Route path="settings" element={<SiteSettings />} />
+                      <Route path="homepage" element={<HomepageSettings />} />
+                      <Route path="kyc" element={<KycManager />} />
+                      <Route path="requests" element={<RequestManagement />} />
+                      <Route path="content" element={<ContentManagement />} />
+                    </Route>
                   </Route>
                   
-                  <Route path="staking" element={
-                    <ProtectedRoute>
-                      <Staking />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="governance" element={
-                    <ProtectedRoute>
-                      <Governance />
-                    </ProtectedRoute>
-                  } />
-                  
-                  {/* Wallet connection (protected) */}
-                  <Route path="connect-wallet" element={
-                    <ProtectedRoute>
-                      <div className="container mx-auto py-12 px-4">
-                        <h1 className="text-3xl font-display font-bold mb-8">Connect Your Wallet</h1>
-                        <div className="bg-white dark:bg-dark-light p-6 rounded-lg shadow-md">
-                          <p className="mb-6">Connect your Web3 wallet to interact with the Oriro platform.</p>
-                          <ConnectWalletButton />
+                  {/* Main layout routes */}
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Home />} />
+                    
+                    {/* Protected routes */}
+                    <Route path="dashboard" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                    
+                    {/* Marketplace routes */}
+                    <Route path="marketplace" element={<MarketplaceLayout />}>
+                      <Route index element={<Marketplace />} />
+                      <Route path="collection" element={
+                        <ProtectedRoute>
+                          <MyCollection />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="bonds" element={<Bonds />} />
+                      <Route path="my-bonds" element={
+                        <ProtectedRoute>
+                          <MyBonds />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="tokens" element={<Tokens />} />
+                      <Route path="create-nft" element={
+                        <ProtectedRoute>
+                          <NFTRequestForm />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="create-bond" element={
+                        <ProtectedRoute>
+                          <BondRequestForm />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="create-token" element={
+                        <ProtectedRoute>
+                          <TokenRequestForm />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="my-requests" element={
+                        <ProtectedRoute>
+                          <UserRequestsDashboard />
+                        </ProtectedRoute>
+                      } />
+                    </Route>
+                    
+                    <Route path="staking" element={
+                      <ProtectedRoute>
+                        <Staking />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="governance" element={
+                      <ProtectedRoute>
+                        <Governance />
+                      </ProtectedRoute>
+                    } />
+                    
+                    {/* Wallet connection (protected) */}
+                    <Route path="connect-wallet" element={
+                      <ProtectedRoute>
+                        <div className="container mx-auto py-12 px-4">
+                          <h1 className="text-3xl font-display font-bold mb-8">Connect Your Wallet</h1>
+                          <div className="bg-white dark:bg-dark-light p-6 rounded-lg shadow-md">
+                            <p className="mb-6">Connect your Web3 wallet to interact with the Oriro platform.</p>
+                            <ConnectWalletButton />
+                          </div>
                         </div>
-                      </div>
-                    </ProtectedRoute>
-                  } />
-                  
-                  {/* User profile routes (protected) */}
-                  <Route path="/" element={
-                    <ProtectedRoute>
-                      <ProfileLayout />
-                    </ProtectedRoute>
-                  }>
-                    <Route path="profile" element={<KycForm />} />
-                    <Route path="profile/edit" element={<ProfileEdit />} />
-                    <Route path="settings" element={<UserSettings />} />
-                  </Route>
+                      </ProtectedRoute>
+                    } />
+                    
+                    {/* User profile routes (protected) */}
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <ProfileLayout />
+                      </ProtectedRoute>
+                    }>
+                      <Route path="profile" element={<KycForm />} />
+                      <Route path="profile/edit" element={<ProfileEdit />} />
+                      <Route path="settings" element={<UserSettings />} />
+                    </Route>
 
-                  {/* Public pages */}
-                  <Route path="docs" element={<Documentation />} />
-                  <Route path="whitepaper" element={<Whitepaper />} />
-                  <Route path="support" element={<Support />} />
-                  <Route path="faq" element={<FAQ />} />
-                  <Route path="privacy" element={<PrivacyPolicy />} />
-                  <Route path="terms" element={<TermsOfService />} />
-                  <Route path="cookies" element={<CookiePolicy />} />
-                  <Route path="contact" element={<Contact />} />
-                  
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Route>
-              </Routes>
-            </Router>
-            <ToastContainer position="bottom-right" />
+                    {/* Public pages */}
+                    <Route path="docs" element={<Documentation />} />
+                    <Route path="whitepaper" element={<Whitepaper />} />
+                    <Route path="support" element={<Support />} />
+                    <Route path="faq" element={<FAQ />} />
+                    <Route path="privacy" element={<PrivacyPolicy />} />
+                    <Route path="terms" element={<TermsOfService />} />
+                    <Route path="cookies" element={<CookiePolicy />} />
+                    <Route path="contact" element={<Contact />} />
+                    
+                    <Route path="exchange" element={
+                      <ProtectedRoute>
+                        <Exchange />
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Route>
+                </Routes>
+              </Router>
+              <ToastContainer position="bottom-right" />
+            </ExchangeProvider>
           </BlockchainProvider>
         </WalletProvider>
       </AuthProvider>

@@ -225,9 +225,9 @@ const Dashboard = () => {
                 <p className="text-sm mt-1 text-white/80">Trade assets</p>
               </Link>
               
-              <Link to="/profile" className="bg-slate-700 hover:bg-slate-800 transition-colors text-white p-4 rounded-lg text-center">
-                <p className="font-medium">Profile</p>
-                <p className="text-sm mt-1 text-white/80">Manage account</p>
+              <Link to="/exchange" className="bg-green-600 hover:bg-green-700 transition-colors text-white p-4 rounded-lg text-center">
+                <p className="font-medium">Exchange</p>
+                <p className="text-sm mt-1 text-white/80">Crypto/Fiat exchange</p>
               </Link>
             </div>
           </div>

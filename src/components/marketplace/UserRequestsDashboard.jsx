@@ -44,7 +44,7 @@ const RequestCard = ({ request, type }) => {
               />
             )}
           </>
-        ) : (
+        ) : type === 'bond' ? (
           <>
             <p className="text-sm text-gray-700 dark:text-gray-300">
               <span className="font-medium">Face Value:</span> {request.faceValue} ETH
@@ -58,6 +58,37 @@ const RequestCard = ({ request, type }) => {
             <p className="text-sm text-gray-700 dark:text-gray-300">
               <span className="font-medium">Quantity:</span> {request.quantity}
             </p>
+          </>
+        ) : (
+          // Token type
+          <>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Symbol:</span> {request.symbol}
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Total Supply:</span> {request.totalSupply?.toLocaleString()}
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Initial Price:</span> {request.initialPrice} ETH
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Token Type:</span> {request.tokenType}
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Network:</span> {request.targetNetwork}
+            </p>
+            {request.features && (
+              <div className="mt-2">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Features:</p>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(request.features).filter(([key, value]) => value).map(([feature]) => (
+                    <span key={feature} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                      {feature.charAt(0).toUpperCase() + feature.slice(1)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -78,7 +109,7 @@ const RequestCard = ({ request, type }) => {
 
 const UserRequestsDashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [requests, setRequests] = useState({ nftRequests: [], bondRequests: [] });
+  const [requests, setRequests] = useState({ nftRequests: [], bondRequests: [], tokenRequests: [] });
   const [activeTab, setActiveTab] = useState('nft');
 
   useEffect(() => {
@@ -122,6 +153,12 @@ const UserRequestsDashboard = () => {
           >
             Create Bond
           </Link>
+          <Link
+            to="/marketplace/create-token"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800"
+          >
+            Create Token
+          </Link>
         </div>
       </div>
 
@@ -147,6 +184,16 @@ const UserRequestsDashboard = () => {
           >
             Bond Requests ({requests.bondRequests.length})
           </button>
+          <button
+            onClick={() => setActiveTab('token')}
+            className={`px-3 py-2 text-sm font-medium rounded-md ${
+              activeTab === 'token'
+                ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            Token Requests ({requests.tokenRequests?.length || 0})
+          </button>
         </nav>
       </div>
 
@@ -159,12 +206,22 @@ const UserRequestsDashboard = () => {
           ) : (
             <p className="text-center text-gray-500 dark:text-gray-400">No NFT requests yet</p>
           )
-        ) : requests.bondRequests.length > 0 ? (
-          requests.bondRequests.map((request) => (
-            <RequestCard key={request._id} request={request} type="bond" />
-          ))
+        ) : activeTab === 'bond' ? (
+          requests.bondRequests.length > 0 ? (
+            requests.bondRequests.map((request) => (
+              <RequestCard key={request._id} request={request} type="bond" />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400">No Bond requests yet</p>
+          )
         ) : (
-          <p className="text-center text-gray-500 dark:text-gray-400">No Bond requests yet</p>
+          requests.tokenRequests?.length > 0 ? (
+            requests.tokenRequests.map((request) => (
+              <RequestCard key={request._id} request={request} type="token" />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400">No Token requests yet</p>
+          )
         )}
       </div>
     </div>

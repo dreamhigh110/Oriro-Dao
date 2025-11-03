@@ -33,6 +33,7 @@ const Navbar = () => {
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Marketplace', path: '/marketplace' },
     { name: 'Staking', path: '/staking' },
+    { name: 'Exchange', path: '/exchange' },
   ];
 
   return (

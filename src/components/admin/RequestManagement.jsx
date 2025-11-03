@@ -62,7 +62,7 @@ const RequestDetailModal = ({ request, type, isOpen, onClose, onStatusUpdate }) 
 
           <div className="mt-6">
             <h4 className="font-medium text-gray-900 mb-2">
-              {type === 'nft' ? 'NFT Details' : 'Bond Details'}
+              {type === 'nft' ? 'NFT Details' : type === 'bond' ? 'Bond Details' : 'Token Details'}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {type === 'nft' ? (
@@ -85,7 +85,7 @@ const RequestDetailModal = ({ request, type, isOpen, onClose, onStatusUpdate }) 
                     </div>
                   )}
                 </>
-              ) : (
+              ) : type === 'bond' ? (
                 <>
                   <div className="text-sm">
                     <span className="font-medium">Face Value:</span> {request.faceValue} ETH
@@ -102,6 +102,44 @@ const RequestDetailModal = ({ request, type, isOpen, onClose, onStatusUpdate }) 
                   <div className="md:col-span-2">
                     <span className="font-medium">Terms:</span>
                     <p className="text-sm text-gray-600 mt-1">{request.terms}</p>
+                  </div>
+                </>
+              ) : (
+                // Token details
+                <>
+                  <div className="text-sm">
+                    <span className="font-medium">Symbol:</span> {request.symbol}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Total Supply:</span> {request.totalSupply?.toLocaleString()}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Decimals:</span> {request.decimals}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Token Type:</span> {request.tokenType}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Initial Price:</span> {request.initialPrice} ETH
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Target Network:</span> {request.targetNetwork}
+                  </div>
+                  {request.features && (
+                    <div className="md:col-span-2">
+                      <span className="font-medium">Features:</span>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {Object.entries(request.features).filter(([key, value]) => value).map(([feature]) => (
+                          <span key={feature} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {feature.charAt(0).toUpperCase() + feature.slice(1)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="md:col-span-2">
+                    <span className="font-medium">Use Case:</span>
+                    <p className="text-sm text-gray-600 mt-1">{request.useCase}</p>
                   </div>
                 </>
               )}
@@ -136,7 +174,7 @@ const RequestDetailModal = ({ request, type, isOpen, onClose, onStatusUpdate }) 
                   disabled={updating}
                   className="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:opacity-50"
                 >
-                  {updating ? 'Processing...' : 'Approve & Create ' + (type === 'nft' ? 'NFT' : 'Bond')}
+                  {updating ? 'Processing...' : `Approve & Create ${type === 'nft' ? 'NFT' : type === 'bond' ? 'Bond' : 'Token'}`}
                 </button>
                 <button
                   onClick={() => handleStatusUpdate('rejected')}
@@ -198,60 +236,66 @@ const RequestCard = ({ request, type, onStatusUpdate, onViewDetails, isSelected,
               by {request.user.name} ({request.user.email})
             </p>
             <p className="text-sm text-gray-600 mt-1 line-clamp-2">{request.description}</p>
+            
+            {/* Type-specific details */}
+            <div className="mt-2 text-xs text-gray-500 space-y-1">
+              {type === 'nft' ? (
+                <>
+                  <div>Price: {request.price} ETH • Quantity: {request.quantity}</div>
+                  <div>Category: {request.category || 'Other'}</div>
+                </>
+              ) : type === 'bond' ? (
+                <>
+                  <div>Face Value: {request.faceValue} ETH • Interest: {request.interestRate}%</div>
+                  <div>Maturity: {request.maturityPeriod} days • Quantity: {request.quantity}</div>
+                </>
+              ) : (
+                <>
+                  <div>Symbol: {request.symbol} • Supply: {request.totalSupply?.toLocaleString()}</div>
+                  <div>Type: {request.tokenType} • Network: {request.targetNetwork}</div>
+                  <div>Initial Price: {request.initialPrice} ETH</div>
+                </>
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
+        
+        <div className="flex flex-col items-end space-y-2">
+          <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(request.status)}`}>
             {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
           </span>
+          <div className="text-xs text-gray-500">
+            {new Date(request.createdAt).toLocaleDateString()}
+          </div>
         </div>
-      </div>
-
-      <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-        {type === 'nft' ? (
-          <>
-            <div><span className="font-medium">Price:</span> {request.price} ETH</div>
-            <div><span className="font-medium">Quantity:</span> {request.quantity}</div>
-            <div className="col-span-2"><span className="font-medium">Category:</span> {request.category || 'Other'}</div>
-          </>
-        ) : (
-          <>
-            <div><span className="font-medium">Face Value:</span> {request.faceValue} ETH</div>
-            <div><span className="font-medium">Interest:</span> {request.interestRate}%</div>
-          </>
-        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onViewDetails(request)}
-            className="flex items-center px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-          >
-            <FiEye className="mr-1" /> Details
-          </button>
-          {request.status === 'pending' && (
-            <>
-              <button
-                onClick={() => handleQuickAction('approved')}
-                disabled={updating}
-                className="flex items-center px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-800 rounded disabled:opacity-50"
-              >
-                ✓ Quick Approve
-              </button>
-              <button
-                onClick={() => handleQuickAction('rejected')}
-                disabled={updating}
-                className="flex items-center px-3 py-1 text-sm bg-red-100 hover:bg-red-200 text-red-800 rounded disabled:opacity-50"
-              >
-                ✗ Quick Reject
-              </button>
-            </>
-          )}
-        </div>
-        <span className="text-xs text-gray-500">
-          {new Date(request.createdAt).toLocaleDateString()}
-        </span>
+        <button
+          onClick={() => onViewDetails(request)}
+          className="flex items-center text-indigo-600 hover:text-indigo-800 text-sm"
+        >
+          <FiEye className="mr-1" /> View Details
+        </button>
+        
+        {request.status === 'pending' && (
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleQuickAction('approved')}
+              disabled={updating}
+              className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 disabled:opacity-50"
+            >
+              {updating ? '...' : 'Approve'}
+            </button>
+            <button
+              onClick={() => handleQuickAction('rejected')}
+              disabled={updating}
+              className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 disabled:opacity-50"
+            >
+              {updating ? '...' : 'Reject'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -259,7 +303,7 @@ const RequestCard = ({ request, type, onStatusUpdate, onViewDetails, isSelected,
 
 const RequestManagement = () => {
   const [loading, setLoading] = useState(true);
-  const [requests, setRequests] = useState({ nftRequests: [], bondRequests: [] });
+  const [requests, setRequests] = useState({ nftRequests: [], bondRequests: [], tokenRequests: [] });
   const [activeTab, setActiveTab] = useState('nft');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -293,20 +337,10 @@ const RequestManagement = () => {
         adminFeedback: feedback
       });
       
-      // If approved, we could also trigger NFT/Bond creation here
+      // Note: Automatic NFT/Bond/Token creation endpoints are not implemented yet
+      // The request approval works fine without this feature
       if (status === 'approved') {
-        try {
-          // Call the create endpoint for the approved request
-          const createEndpoint = type === 'nft' ? 
-            `/marketplace/nfts/create-from-request/${requestId}` : 
-            `/marketplace/bonds/create-from-request/${requestId}`;
-          
-          await api.post(createEndpoint);
-          toast.success(`${type.toUpperCase()} created successfully on marketplace!`);
-        } catch (createError) {
-          console.error('Error creating NFT/Bond:', createError);
-          toast.warning(`Request approved but ${type.toUpperCase()} creation failed. Please create manually.`);
-        }
+        toast.success(`${type.toUpperCase()} request approved successfully! You can now manually create the ${type} if needed.`);
       }
       
       // Refresh requests after update
@@ -345,15 +379,15 @@ const RequestManagement = () => {
   const exportRequests = () => {
     const currentRequests = getCurrentRequests();
     const csvContent = [
-      ['Name', 'User', 'Email', 'Status', 'Created', 'Price/Value', 'Quantity'].join(','),
+      ['Name', 'User', 'Email', 'Status', 'Created', 'Price/Value', 'Quantity/Supply'].join(','),
       ...currentRequests.map(request => [
         request.name,
         request.user.name,
         request.user.email,
         request.status,
         new Date(request.createdAt).toLocaleDateString(),
-        activeTab === 'nft' ? request.price : request.faceValue,
-        request.quantity
+        activeTab === 'nft' ? request.price : activeTab === 'bond' ? request.faceValue : request.initialPrice,
+        activeTab === 'token' ? request.totalSupply : request.quantity
       ].join(','))
     ].join('\n');
 
@@ -367,7 +401,9 @@ const RequestManagement = () => {
   };
 
   const getCurrentRequests = () => {
-    return activeTab === 'nft' ? requests.nftRequests : requests.bondRequests;
+    return activeTab === 'nft' ? requests.nftRequests : 
+           activeTab === 'bond' ? requests.bondRequests : 
+           requests.tokenRequests;
   };
 
   const filteredAndSortedRequests = () => {
@@ -384,7 +420,8 @@ const RequestManagement = () => {
         request.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         request.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         request.user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        request.description.toLowerCase().includes(searchTerm.toLowerCase())
+        request.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (activeTab === 'token' && request.symbol?.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
     
@@ -447,9 +484,9 @@ const RequestManagement = () => {
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-3xl font-bold">Manage NFT & Bond Requests</h2>
+          <h2 className="text-3xl font-bold">Manage NFT, Bond & Token Requests</h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Review and manage user requests for creating NFTs and Bonds.
+            Review and manage user requests for creating NFTs, Bonds, and custom Tokens.
           </p>
         </div>
         <Link 
@@ -574,6 +611,19 @@ const RequestManagement = () => {
               }`}
             >
               Bond Requests ({requests.bondRequests.length})
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('token');
+                setSelectedRequests([]);
+              }}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'token'
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Token Requests ({requests.tokenRequests?.length || 0})
             </button>
           </nav>
         </div>

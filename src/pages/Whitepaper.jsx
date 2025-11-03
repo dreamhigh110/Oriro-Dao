@@ -138,16 +138,16 @@ Comprehensive insurance coverage for smart contract risks and operational failur
 
 ## 10. Roadmap
 
-### Q1 2024 - Foundation
+### Q1 2025 - Foundation
 Platform launch, basic governance implementation, NFT marketplace
 
-### Q2 2024 - Expansion
+### Q2 2025 - Expansion
 Bond marketplace, staking rewards, multi-chain support
 
-### Q3 2024 - Advanced Features
+### Q3 2025 - Advanced Features
 Advanced governance, yield farming, insurance integration
 
-### Q4 2024 - Ecosystem Growth
+### Q4 2025 - Ecosystem Growth
 Partner integrations, mobile app, institutional features
 
 ## 11. Conclusion

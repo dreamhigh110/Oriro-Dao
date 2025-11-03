@@ -13,8 +13,10 @@ const MarketplaceNav = () => {
     { path: '/marketplace/collection', label: 'My NFTs' },
     { path: '/marketplace/bonds', label: 'Bonds' },
     { path: '/marketplace/my-bonds', label: 'My Bonds' },
+    { path: '/marketplace/tokens', label: 'Tokens' },
     { path: '/marketplace/create-nft', label: 'Create NFT' },
     { path: '/marketplace/create-bond', label: 'Create Bond' },
+    { path: '/marketplace/create-token', label: 'Create Token' },
     { path: '/marketplace/my-requests', label: 'My Requests' }
   ];
 

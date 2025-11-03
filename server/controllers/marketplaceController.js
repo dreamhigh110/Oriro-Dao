@@ -1,5 +1,6 @@
 import NFTRequest from '../models/NFTRequest.js';
 import BondRequest from '../models/BondRequest.js';
+import TokenRequest from '../models/TokenRequest.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
 
 // Create NFT Request
@@ -46,19 +47,96 @@ export const createBondRequest = async (req, res) => {
   }
 };
 
+// Create Token Request
+export const createTokenRequest = async (req, res) => {
+  try {
+    const { 
+      name, 
+      symbol, 
+      description, 
+      totalSupply, 
+      decimals, 
+      tokenType, 
+      features, 
+      initialPrice, 
+      useCase, 
+      targetNetwork 
+    } = req.body;
+    
+    const tokenRequest = await TokenRequest.create({
+      user: req.user._id,
+      name,
+      symbol: symbol.toUpperCase(),
+      description,
+      totalSupply,
+      decimals,
+      tokenType,
+      features,
+      initialPrice,
+      useCase,
+      targetNetwork
+    });
+    
+    res.status(201).json(tokenRequest);
+  } catch (error) {
+    console.error('Error creating Token request:', error);
+    res.status(400).json({ message: 'Error creating Token request', error: error.message });
+  }
+};
+
 // Get User's Requests
 export const getUserRequests = async (req, res) => {
   try {
     const nftRequests = await NFTRequest.find({ user: req.user._id }).sort('-createdAt');
     const bondRequests = await BondRequest.find({ user: req.user._id }).sort('-createdAt');
+    const tokenRequests = await TokenRequest.find({ user: req.user._id }).sort('-createdAt');
     
     res.json({
       nftRequests,
-      bondRequests
+      bondRequests,
+      tokenRequests
     });
   } catch (error) {
     console.error('Error fetching user requests:', error);
     res.status(400).json({ message: 'Error fetching requests', error: error.message });
+  }
+};
+
+// Get Approved Tokens for marketplace display
+export const getApprovedTokens = async (req, res) => {
+  try {
+    const approvedTokens = await TokenRequest.find({ 
+      status: { $in: ['approved', 'completed'] }
+    })
+    .populate('user', 'name email')
+    .sort('-createdAt');
+    
+    // Transform the data for marketplace display
+    const tokens = approvedTokens.map(token => ({
+      id: token._id,
+      name: token.name,
+      symbol: token.symbol,
+      description: token.description,
+      totalSupply: token.totalSupply,
+      decimals: token.decimals,
+      tokenType: token.tokenType,
+      features: token.features,
+      initialPrice: token.initialPrice,
+      targetNetwork: token.targetNetwork,
+      creator: token.user,
+      createdAt: token.createdAt,
+      status: token.status,
+      // Mock data for marketplace display (these would come from actual blockchain/market data in production)
+      currentPrice: token.initialPrice * (0.8 + Math.random() * 0.4), // Simulate price variation
+      change24h: (Math.random() - 0.5) * 20, // Random price change
+      marketCap: token.totalSupply * token.initialPrice * (0.8 + Math.random() * 0.4), // Calculated market cap
+      volume24h: Math.random() * 10000, // Mock trading volume
+    }));
+    
+    res.json(tokens);
+  } catch (error) {
+    console.error('Error fetching approved tokens:', error);
+    res.status(400).json({ message: 'Error fetching tokens', error: error.message });
   }
 };
 
@@ -73,9 +151,14 @@ export const getAllRequests = async (req, res) => {
       .populate('user', 'name email')
       .sort('-createdAt');
     
+    const tokenRequests = await TokenRequest.find()
+      .populate('user', 'name email')
+      .sort('-createdAt');
+    
     res.json({
       nftRequests,
-      bondRequests
+      bondRequests,
+      tokenRequests
     });
   } catch (error) {
     console.error('Error fetching all requests:', error);
@@ -88,7 +171,20 @@ export const updateRequestStatus = async (req, res) => {
   try {
     const { requestId, requestType, status, adminFeedback } = req.body;
     
-    const RequestModel = requestType === 'nft' ? NFTRequest : BondRequest;
+    let RequestModel;
+    switch (requestType) {
+      case 'nft':
+        RequestModel = NFTRequest;
+        break;
+      case 'bond':
+        RequestModel = BondRequest;
+        break;
+      case 'token':
+        RequestModel = TokenRequest;
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid request type' });
+    }
     
     const request = await RequestModel.findById(requestId);
     if (!request) {

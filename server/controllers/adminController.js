@@ -435,4 +435,63 @@ export const getSiteSettings = async (req, res) => {
       error: error.message 
     });
   }
+};
+
+// @desc    Get homepage settings
+// @route   GET /api/admin/homepage-settings
+// @access  Admin
+export const getHomepageSettings = async (req, res) => {
+  try {
+    const siteSettings = await SiteSettings.findSettings();
+    
+    res.json({
+      success: true,
+      homepageSettings: siteSettings.homepageSettings
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Update homepage settings
+// @route   PUT /api/admin/homepage-settings
+// @access  Admin
+export const updateHomepageSettings = async (req, res) => {
+  try {
+    const { homepageSettings } = req.body;
+    
+    if (!homepageSettings) {
+      return res.status(400).json({ message: 'Homepage settings are required' });
+    }
+    
+    let siteSettings = await SiteSettings.findOne();
+    
+    if (!siteSettings) {
+      siteSettings = await SiteSettings.create({
+        siteAccessEnabled: true,
+        registrationEnabled: true,
+        homepageSettings
+      });
+    } else {
+      siteSettings.homepageSettings = {
+        ...siteSettings.homepageSettings,
+        ...homepageSettings
+      };
+      await siteSettings.save();
+    }
+    
+    res.json({
+      success: true,
+      message: 'Homepage settings updated successfully',
+      homepageSettings: siteSettings.homepageSettings
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
 }; 

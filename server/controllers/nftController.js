@@ -16,7 +16,7 @@ export const getAllNFTs = async (req, res) => {
       query.$text = { $search: search };
     }
 
-    // Execute query with sorting
+    // Execute query with sorting 
     const nfts = await NFT.find(query)
       .populate('creator', 'name email')
       .sort(sort);

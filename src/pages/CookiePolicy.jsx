@@ -21,7 +21,7 @@ const CookiePolicy = () => {
     alert('Cookie preferences saved successfully!');
   };
 
-  const lastUpdated = 'January 15, 2024';
+  const lastUpdated = 'January 15, 2025';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-dark-darker py-12">

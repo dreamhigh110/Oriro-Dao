@@ -9,7 +9,9 @@ import {
   getSiteSettings,
   generateAccessPassword,
   getKycRequests,
-  updateKycStatus
+  updateKycStatus,
+  getHomepageSettings,
+  updateHomepageSettings
 } from '../controllers/adminController.js';
 import { 
   getContent, 
@@ -38,6 +40,11 @@ router.route('/site-settings')
   .get(getSiteSettings)
   .put(updateSiteSettings);
 router.post('/generate-access-password', generateAccessPassword);
+
+// Homepage settings
+router.route('/homepage-settings')
+  .get(getHomepageSettings)
+  .put(updateHomepageSettings);
 
 // KYC management
 router.get('/kyc-requests', getKycRequests);

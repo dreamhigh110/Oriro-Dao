@@ -21,6 +21,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import marketplaceRoutes from './routes/marketplaceRoutes.js';
 import bondRoutes from './routes/bondRoutes.js';
 import nftRoutes from './routes/nftRoutes.js';
+import exchangeRoutes from './routes/exchangeRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -202,12 +203,31 @@ app.get('/api/debug/site-access', async (req, res) => {
   }
 });
 
+// Public homepage settings endpoint
+app.get('/api/homepage-settings', async (req, res) => {
+  try {
+    const siteSettings = await SiteSettings.findSettings();
+    
+    res.json({
+      success: true,
+      homepageSettings: siteSettings.homepageSettings
+    });
+  } catch (error) {
+    console.error('Homepage settings error:', error);
+    res.status(500).json({
+      message: 'Server error',
+      error: error.message
+    });
+  }
+});
+
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/marketplace', bondRoutes);
 app.use('/api/marketplace', nftRoutes);
+app.use('/api/exchange', exchangeRoutes);
 
 // Root route
 app.get('/', (req, res) => {

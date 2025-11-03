@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { FiUsers, FiSettings, FiUserCheck, FiPackage, FiFileText } from 'react-icons/fi';
+import { FiUsers, FiSettings, FiUserCheck, FiPackage, FiFileText, FiHome } from 'react-icons/fi';
 
 const StatCard = ({ title, value, icon, bgColor }) => (
   <div className={`p-6 rounded-lg shadow-md ${bgColor}`}>
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       
       <div className="bg-white dark:bg-dark-darker rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4">Admin Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <Link 
             to="/admin/users"
             className="flex items-center justify-center px-6 py-3 bg-primary text-white rounded-lg shadow hover:bg-primary-dark hover:shadow-md transition-all duration-200 text-center w-full"
@@ -109,6 +109,13 @@ export default function AdminDashboard() {
             className="flex items-center justify-center px-6 py-3 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 hover:shadow-md transition-all duration-200 text-center w-full"
           >
             <FiSettings className="mr-2" /> Platform Settings
+          </Link>
+
+          <Link 
+            to="/admin/homepage"
+            className="flex items-center justify-center px-6 py-3 bg-orange-600 text-white rounded-lg shadow hover:bg-orange-700 hover:shadow-md transition-all duration-200 text-center w-full"
+          >
+            <FiHome className="mr-2" /> Homepage Settings
           </Link>
           
           <Link 

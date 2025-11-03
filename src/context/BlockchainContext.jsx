@@ -150,6 +150,20 @@ export const BlockchainProvider = ({ children }) => {
     tokenBalance,
     totalSupply,
     nativeBalance: formattedNativeBalance,
+    tokens: [
+      {
+        address: '0x123...', // Replace with actual token address
+        symbol: 'ETH',
+        name: 'Ethereum',
+        decimals: 18
+      },
+      {
+        address: '0x456...', // Replace with actual token address
+        symbol: 'USDT',
+        name: 'Tether USD',
+        decimals: 6
+      }
+    ],
     
     // Loading states
     loadingTokenData,
