@@ -4,16 +4,52 @@ import nodemailer from 'nodemailer';
 const createTransporter = () => {
   // For production, use SMTP settings from environment variables
   if (globalThis.process?.env.NODE_ENV === 'production' || true) { // Force use of real email even in development
-    return nodemailer.createTransport({
-      service: globalThis.process?.env.EMAIL_SERVICE,
+    const emailService = globalThis.process?.env.EMAIL_SERVICE;
+    const port = parseInt(globalThis.process?.env.EMAIL_PORT) || 587;
+    const isSecure = port === 465;
+    
+    // Clean password - remove quotes if present (dotenv may include them)
+    let emailPass = globalThis.process?.env.EMAIL_PASS || '';
+    if (emailPass.startsWith('"') && emailPass.endsWith('"')) {
+      emailPass = emailPass.slice(1, -1);
+    }
+    if (emailPass.startsWith("'") && emailPass.endsWith("'")) {
+      emailPass = emailPass.slice(1, -1);
+    }
+    
+    const transporterConfig = {
       host: globalThis.process?.env.EMAIL_HOST,
-      port: globalThis.process?.env.EMAIL_PORT,
-      secure: false, // true for 465, false for other ports
+      port: port,
+      secure: isSecure, // true for 465, false for other ports
       auth: {
         user: globalThis.process?.env.EMAIL_USER,
-        pass: globalThis.process?.env.EMAIL_PASS
+        pass: emailPass
+      },
+      // For Hostinger and other SMTP servers using STARTTLS (port 587)
+      requireTLS: !isSecure,
+      tls: {
+        // Do not fail on invalid certificates
+        rejectUnauthorized: false
       }
+    };
+    
+    // Only include service property if EMAIL_SERVICE is set (for well-known services like Gmail)
+    if (emailService && emailService.trim() !== '') {
+      transporterConfig.service = emailService;
+    }
+    
+    // Log configuration for debugging (without password)
+    console.log('Email transporter config:', {
+      host: transporterConfig.host,
+      port: transporterConfig.port,
+      secure: transporterConfig.secure,
+      requireTLS: transporterConfig.requireTLS,
+      user: transporterConfig.auth.user,
+      passwordLength: transporterConfig.auth.pass?.length || 0,
+      passwordStartsWith: transporterConfig.auth.pass?.substring(0, 2) || 'N/A'
     });
+    
+    return nodemailer.createTransport(transporterConfig);
   }
   
   // For development, use Ethereal (fake SMTP service for testing)
@@ -90,6 +126,16 @@ export const sendVerificationEmail = async (user, verificationToken) => {
     
     // Send the email
     const transporter = createTransporter();
+    
+    // Verify connection before sending
+    try {
+      await transporter.verify();
+      console.log('✅ SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('❌ SMTP connection verification failed:', verifyError.message);
+      throw verifyError;
+    }
+    
     const info = await transporter.sendMail(mailOptions);
     
     console.log('Verification email sent: %s', info.messageId);
@@ -97,6 +143,15 @@ export const sendVerificationEmail = async (user, verificationToken) => {
     return true;
   } catch (error) {
     console.error('Error sending verification email:', error);
+    
+    // Provide more specific error messages
+    if (error.code === 'EAUTH') {
+      console.error('\n🔐 Authentication Error Details:');
+      console.error('  - Email: ' + (globalThis.process?.env.EMAIL_USER || 'not set'));
+      console.error('  - Password length: ' + (globalThis.process?.env.EMAIL_PASS?.length || 0) + ' characters');
+      console.error('  - Host: ' + (globalThis.process?.env.EMAIL_HOST || 'not set'));
+    }
+    
     return false;
   }
 };
@@ -163,6 +218,22 @@ export const sendPasswordResetEmail = async (user, resetToken) => {
     
     // Send the email
     const transporter = createTransporter();
+    
+    // Verify connection before sending
+    try {
+      await transporter.verify();
+      console.log('✅ SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('❌ SMTP connection verification failed:', verifyError.message);
+      console.error('Please check your email credentials in .env file');
+      console.error('Common issues:');
+      console.error('  - Wrong email or password');
+      console.error('  - Email account not activated');
+      console.error('  - SMTP not enabled for this account');
+      console.error('  - Password with special characters may need quotes in .env');
+      throw verifyError;
+    }
+    
     const info = await transporter.sendMail(mailOptions);
     
     console.log('Password reset email sent: %s', info.messageId);
@@ -170,6 +241,20 @@ export const sendPasswordResetEmail = async (user, resetToken) => {
     return true;
   } catch (error) {
     console.error('Error sending password reset email:', error);
+    
+    // Provide more specific error messages
+    if (error.code === 'EAUTH') {
+      console.error('\n🔐 Authentication Error Details:');
+      console.error('  - Email: ' + (globalThis.process?.env.EMAIL_USER || 'not set'));
+      console.error('  - Password length: ' + (globalThis.process?.env.EMAIL_PASS?.length || 0) + ' characters');
+      console.error('  - Host: ' + (globalThis.process?.env.EMAIL_HOST || 'not set'));
+      console.error('\n⚠️  Please verify:');
+      console.error('  1. Email and password are correct');
+      console.error('  2. Email account exists and is active');
+      console.error('  3. SMTP access is enabled in Hostinger');
+      console.error('  4. Password in .env is properly quoted if it contains special characters\n');
+    }
+    
     return false;
   }
 };
